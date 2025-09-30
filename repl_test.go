@@ -12,6 +12,9 @@ func TestCleanInput(t *testing.T) {
 		{
 			input:    "  hello  world  ",
 			expected: []string{"hello", "world"},
+		}, {
+			input:    "BULBASAUR PIKACHU",
+			expected: []string{"bulbasaur", "pikachu"},
 		},
 	}
 
@@ -23,7 +26,9 @@ func TestCleanInput(t *testing.T) {
 		for i := range actual {
 			word := actual[i]
 			expectedWord := c.expected[i]
-			// TODO: compare each word
+			if word != expectedWord {
+				t.Errorf("Actual word %v\nExpectedWord %v", word, expectedWord)
+			}
 		}
 	}
 }
