@@ -7,12 +7,26 @@ import (
 	"strings"
 )
 
+var commandRegistry = map[string]*cliCommand{}
+
+func init() {
+	registerCommand("exit", "Exit the Pokedex", commandExit)
+	registerCommand("help", "Displays a help message", commandHelp)
+}
+
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 		cleanedInput := cleanInput(scanner.Text())
+		command := cleanedInput[0]
+		commandInfo, ok := commandRegistry[command]
+		if !ok {
+			fmt.Println("Unknown command")
+			continue
+		}
+		commandInfo.Callback()
 	}
 }
 
@@ -28,25 +42,24 @@ func commandExit() error {
 }
 
 func commandHelp() error {
-	fmt.Println("TODO:Help content goes here")
+	fmt.Println("Usage:")
+	fmt.Print("\n")
+	for _, commandInfo := range commandRegistry {
+		fmt.Printf("%v: %v\n", commandInfo.Name, commandInfo.Description)
+	}
 	return nil
 }
 
 type cliCommand struct {
-	name        string
-	description string
-	callback    func() error
+	Name        string
+	Description string
+	Callback    func() error
 }
 
-var supportedCommands = map[string]cliCommand{
-	"exit": {
-		name:        "exit",
-		description: "Exit the Pokedex",
-		callback:    commandExit,
-	},
-	"help": {
-		name:        "help",
-		description: "Displays a help message",
-		callback:    commandHelp,
-	},
+func registerCommand(name, description string, callback func() error) {
+	commandRegistry[name] = &cliCommand{
+		Name:        name,
+		Description: description,
+		Callback:    callback,
+	}
 }
