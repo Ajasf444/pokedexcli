@@ -15,6 +15,7 @@ func init() {
 }
 
 func main() {
+	fmt.Println("Welcome to the Pokedex!")
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -47,6 +48,10 @@ func commandHelp() error {
 	for _, commandInfo := range commandRegistry {
 		fmt.Printf("%v: %v\n", commandInfo.Name, commandInfo.Description)
 	}
+	return nil
+}
+
+func commandMap() error {
 	return nil
 }
 
