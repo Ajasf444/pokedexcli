@@ -52,6 +52,7 @@ func commandHelp() error {
 }
 
 func commandMap() error {
+	// TODO: refactor into repl.go
 	return nil
 }
 
