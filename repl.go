@@ -1,12 +1,26 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 )
 
 func startRepl() {
-	// TODO: import functionality from main.go
+	fmt.Println("Welcome to the Pokedex!")
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Print("Pokedex > ")
+		scanner.Scan()
+		cleanedInput := cleanInput(scanner.Text())
+		command := cleanedInput[0]
+		commandInfo, ok := commandRegistry[command]
+		if !ok {
+			fmt.Println("Unknown command")
+			continue
+		}
+		commandInfo.Callback()
+	}
 }
 
 func commandExit() error {
