@@ -6,6 +6,8 @@ import (
 	"os"
 )
 
+var commandRegistry = map[string]*cliCommand{}
+
 func startRepl() {
 	fmt.Println("Welcome to the Pokedex!")
 	scanner := bufio.NewScanner(os.Stdin)
