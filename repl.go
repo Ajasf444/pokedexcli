@@ -8,6 +8,11 @@ import (
 
 var commandRegistry = map[string]*cliCommand{}
 
+func init() {
+	registerCommand("exit", "Exit the Pokedex", commandExit)
+	registerCommand("help", "Displays a help message", commandHelp)
+}
+
 func startRepl() {
 	fmt.Println("Welcome to the Pokedex!")
 	scanner := bufio.NewScanner(os.Stdin)
