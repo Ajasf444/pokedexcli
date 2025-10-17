@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 var commandRegistry = map[string]*cliCommand{}
@@ -28,6 +29,11 @@ func startRepl() {
 		}
 		commandInfo.Callback()
 	}
+}
+
+func cleanInput(text string) []string {
+	lowerText := strings.ToLower(text)
+	return strings.Fields(lowerText)
 }
 
 func commandExit() error {
