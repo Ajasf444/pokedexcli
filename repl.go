@@ -3,9 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 )
+
+const mapRequestLimit = 20
 
 var commandRegistry = map[string]*cliCommand{}
 
@@ -53,6 +56,7 @@ func commandHelp() error {
 
 func commandMap() error {
 	// TODO: incorporate PokeAPI
+	http.Get("blah")
 	return nil
 }
 
