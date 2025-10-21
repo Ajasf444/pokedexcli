@@ -55,7 +55,7 @@ func commandHelp() error {
 }
 
 func commandMap() error {
-	// TODO: incorporate PokeAPI
+	// TODO: incorporate PokeAPI and mapRequestLimit
 	http.Get("blah")
 	return nil
 }
