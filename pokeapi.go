@@ -9,3 +9,7 @@ type Response struct {
 		URL  string `json:"url"`
 	} `json:"results"`
 }
+
+func getRequest() {
+	// TODO: use PokeAPI to make get request
+}
