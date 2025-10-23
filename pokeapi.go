@@ -1,5 +1,9 @@
 package main
 
+import (
+	"net/http"
+)
+
 type Response struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
@@ -12,4 +16,5 @@ type Response struct {
 
 func getRequest() {
 	// TODO: use PokeAPI to make get request
+	http.Get("blah")
 }
