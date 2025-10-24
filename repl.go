@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"net/http"
 	"os"
 	"strings"
 )
@@ -55,8 +54,7 @@ func commandHelp() error {
 }
 
 func commandMap() error {
-	// TODO: incorporate PokeAPI and mapRequestLimit
-	http.Get("blah")
+	// TODO: incorporate pokeapi.go getRequest()
 	return nil
 }
 
