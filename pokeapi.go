@@ -14,7 +14,7 @@ type Response struct {
 	} `json:"results"`
 }
 
-func getRequest() {
+func getRequest(url string) {
 	// TODO: use PokeAPI to make get request
-	http.Get("blah")
+	http.Get(url)
 }
