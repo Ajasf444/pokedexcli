@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-type Response struct {
+type LocationAreaResponse struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
 	Previous string `json:"previous"`
