@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"net/http"
 )
 
@@ -22,4 +23,5 @@ func getRequest(url string) {
 		// TODO: error
 	}
 	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
 }
