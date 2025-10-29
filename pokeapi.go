@@ -15,7 +15,7 @@ type LocationAreaResponse struct {
 	} `json:"results"`
 }
 
-func getRequest(url string) {
+func getRequest(url string) ([]byte, error) {
 	// TODO: use PokeAPI to make get request
 	client := &http.Client{}
 	resp, err := client.Get(url)
@@ -24,4 +24,8 @@ func getRequest(url string) {
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		// TODO: error
+	}
+	return body, nil
 }
