@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"io"
 	"net/http"
 )
@@ -20,12 +21,12 @@ func getRequest(url string) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Get(url)
 	if err != nil {
-		// TODO: error
+		return []byte{}, errors.New("error: failed to get response")
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		// TODO: error
+		return []byte{}, errors.New("error: failed to read response body")
 	}
 	return body, nil
 }
