@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
@@ -17,7 +18,6 @@ type LocationAreaResponse struct {
 }
 
 func getRequest(url string) ([]byte, error) {
-	// TODO: use PokeAPI to make get request
 	client := &http.Client{}
 	resp, err := client.Get(url)
 	if err != nil {
@@ -29,4 +29,13 @@ func getRequest(url string) ([]byte, error) {
 		return []byte{}, errors.New("error: failed to read response body")
 	}
 	return body, nil
+}
+
+func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error) {
+	response := LocationAreaResponse{}
+	err := json.Unmarshal(data, &response)
+	if err != nil {
+		return LocationAreaResponse{}, errors.New("error: unable to unmarshal LocationAreaResponse")
+	}
+	return response, nil
 }
