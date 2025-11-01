@@ -39,3 +39,11 @@ func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error
 	}
 	return response, nil
 }
+
+func getLocationAreaResponse(url string) {
+	data, err := getRequest(url)
+	if err != nil {
+		// TODO: error
+	}
+	jsonData, err := convertDataToLocationAreaResponse(data)
+}
