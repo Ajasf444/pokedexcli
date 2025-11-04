@@ -58,6 +58,10 @@ func commandMap() error {
 	return nil
 }
 
+func commandMapb() error {
+	// TODO: incorporate pokeapi.go getRequest()
+}
+
 type cliCommand struct {
 	Name        string
 	Description string
