@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type LocationAreaResponse struct {
@@ -50,4 +52,13 @@ func getLocationAreaResponse(url string) (LocationAreaResponse, error) {
 		return LocationAreaResponse{}, err
 	}
 	return jsonData, nil
+}
+
+func printLocationArea(resp LocationAreaResponse) {
+	data := resp.Results
+	results := []string{}
+	for _, location := range data {
+		results = append(results, location.Name)
+	}
+	fmt.Print(strings.Join(results, "\n") + "\n")
 }
