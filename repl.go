@@ -9,11 +9,18 @@ import (
 
 const mapRequestLimit = 20
 
-var commandRegistry = map[string]*cliCommand{}
+var (
+	commandRegistry = map[string]*cliCommand{}
+	pagination      = PaginationConfig{
+		Next: "",
+		Back: "",
+	}
+)
 
 func init() {
 	registerCommand("exit", "Exit the Pokedex", commandExit)
 	registerCommand("help", "Displays a help message", commandHelp)
+	registerCommand("map", "Displays 20 locations", commandMap)
 }
 
 func startRepl() {
@@ -54,12 +61,18 @@ func commandHelp() error {
 }
 
 func commandMap() error {
-	// TODO: incorporate pokeapi.go getRequest()
+	url := "https://pokeapi.co/api/v2/location-area/"
+	results, err := getLocationAreaResponse(url)
+	if err != nil {
+		return err
+	}
+	printLocationArea(results)
 	return nil
 }
 
 func commandMapb() error {
 	// TODO: incorporate pokeapi.go getRequest()
+	return nil
 }
 
 type cliCommand struct {
