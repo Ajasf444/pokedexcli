@@ -36,7 +36,7 @@ func startRepl() {
 			fmt.Println("Unknown command")
 			continue
 		}
-		commandInfo.Callback()
+		commandInfo.Callback(pagination)
 	}
 }
 
@@ -45,13 +45,13 @@ func cleanInput(text string) []string {
 	return strings.Fields(lowerText)
 }
 
-func commandExit() error {
+func commandExit(pagination PaginationConfig) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp() error {
+func commandHelp(pagination PaginationConfig) error {
 	fmt.Println("Usage:")
 	fmt.Print("\n")
 	for _, commandInfo := range commandRegistry {
@@ -60,7 +60,7 @@ func commandHelp() error {
 	return nil
 }
 
-func commandMap() error {
+func commandMap(pagination PaginationConfig) error {
 	url := "https://pokeapi.co/api/v2/location-area/"
 	results, err := getLocationAreaResponse(url)
 	if err != nil {
@@ -70,7 +70,7 @@ func commandMap() error {
 	return nil
 }
 
-func commandMapb() error {
+func commandMapb(pagination PaginationConfig) error {
 	// TODO: incorporate pokeapi.go getRequest()
 	return nil
 }
@@ -78,10 +78,10 @@ func commandMapb() error {
 type cliCommand struct {
 	Name        string
 	Description string
-	Callback    func() error
+	Callback    func(PaginationConfig) error
 }
 
-func registerCommand(name, description string, callback func() error) {
+func registerCommand(name, description string, callback func(PaginationConfig) error) {
 	commandRegistry[name] = &cliCommand{
 		Name:        name,
 		Description: description,
