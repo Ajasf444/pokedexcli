@@ -62,3 +62,8 @@ func printLocationArea(resp LocationAreaResponse) {
 	}
 	fmt.Print(strings.Join(results, "\n") + "\n")
 }
+
+func updatePagination(pagination *PaginationConfig, resp LocationAreaResponse) {
+	pagination.Back = resp.Previous
+	pagination.Next = resp.Next
+}
