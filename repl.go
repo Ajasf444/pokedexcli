@@ -11,7 +11,7 @@ const mapRequestLimit = 20
 
 var (
 	commandRegistry = map[string]*cliCommand{}
-	pagination      = PaginationConfig{
+	pagination      = &PaginationConfig{
 		Next: "",
 		Back: "",
 	}
@@ -45,13 +45,13 @@ func cleanInput(text string) []string {
 	return strings.Fields(lowerText)
 }
 
-func commandExit(pagination PaginationConfig) error {
+func commandExit(pagination *PaginationConfig) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(pagination PaginationConfig) error {
+func commandHelp(pagination *PaginationConfig) error {
 	fmt.Println("Usage:")
 	fmt.Print("\n")
 	for _, commandInfo := range commandRegistry {
@@ -60,17 +60,18 @@ func commandHelp(pagination PaginationConfig) error {
 	return nil
 }
 
-func commandMap(pagination PaginationConfig) error {
-	url := "https://pokeapi.co/api/v2/location-area/"
+func commandMap(pagination *PaginationConfig) error {
+	url := "https://pokeapi.co/api/v2/location-area/" // TODO: check pagination
 	results, err := getLocationAreaResponse(url)
 	if err != nil {
 		return err
 	}
+	updatePagination(pagination, results)
 	printLocationArea(results)
 	return nil
 }
 
-func commandMapb(pagination PaginationConfig) error {
+func commandMapb(pagination *PaginationConfig) error {
 	// TODO: incorporate pokeapi.go getRequest()
 	return nil
 }
@@ -78,10 +79,10 @@ func commandMapb(pagination PaginationConfig) error {
 type cliCommand struct {
 	Name        string
 	Description string
-	Callback    func(PaginationConfig) error
+	Callback    func(*PaginationConfig) error
 }
 
-func registerCommand(name, description string, callback func(PaginationConfig) error) {
+func registerCommand(name, description string, callback func(*PaginationConfig) error) {
 	commandRegistry[name] = &cliCommand{
 		Name:        name,
 		Description: description,
