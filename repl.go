@@ -21,6 +21,7 @@ func init() {
 	registerCommand("exit", "Exit the Pokedex", commandExit)
 	registerCommand("help", "Displays a help message", commandHelp)
 	registerCommand("map", "Displays 20 locations", commandMap)
+	registerCommand("mapb", "Displays 20 previous locations", commandMapB)
 }
 
 func startRepl() {
@@ -61,6 +62,7 @@ func commandHelp(pagination *PaginationConfig) error {
 }
 
 func commandMap(pagination *PaginationConfig) error {
+	// TODO: put this initial url into initial pagination at top
 	url := "https://pokeapi.co/api/v2/location-area/" // TODO: check pagination
 	results, err := getLocationAreaResponse(url)
 	if err != nil {
@@ -71,7 +73,7 @@ func commandMap(pagination *PaginationConfig) error {
 	return nil
 }
 
-func commandMapb(pagination *PaginationConfig) error {
+func commandMapB(pagination *PaginationConfig) error {
 	// TODO: incorporate pokeapi.go getRequest()
 	return nil
 }
