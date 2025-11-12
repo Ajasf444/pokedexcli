@@ -12,7 +12,7 @@ const mapRequestLimit = 20
 var (
 	commandRegistry = map[string]*cliCommand{}
 	pagination      = &PaginationConfig{
-		Next: "",
+		Next: "https://pokeapi.co/api/v2/location-area/",
 		Back: "",
 	}
 )
@@ -62,8 +62,7 @@ func commandHelp(pagination *PaginationConfig) error {
 }
 
 func commandMap(pagination *PaginationConfig) error {
-	// TODO: put this initial url into initial pagination at top
-	url := "https://pokeapi.co/api/v2/location-area/" // TODO: check pagination
+	url := pagination.Next
 	results, err := getLocationAreaResponse(url)
 	if err != nil {
 		return err
@@ -74,7 +73,13 @@ func commandMap(pagination *PaginationConfig) error {
 }
 
 func commandMapB(pagination *PaginationConfig) error {
-	// TODO: incorporate pokeapi.go getRequest()
+	url := pagination.Back
+	results, err := getLocationAreaResponse(url)
+	if err != nil {
+		return err
+	}
+	updatePagination(pagination, results)
+	printLocationArea(results)
 	return nil
 }
 
