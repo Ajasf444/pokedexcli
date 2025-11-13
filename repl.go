@@ -74,6 +74,10 @@ func commandMap(pagination *PaginationConfig) error {
 
 func commandMapB(pagination *PaginationConfig) error {
 	url := pagination.Back
+	if url == "" {
+		fmt.Print("You are on the first page!\n")
+		return nil
+	}
 	results, err := getLocationAreaResponse(url)
 	if err != nil {
 		return err
