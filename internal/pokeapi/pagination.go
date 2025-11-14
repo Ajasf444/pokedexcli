@@ -1,4 +1,4 @@
-package main
+package pokeapi
 
 type PaginationConfig struct {
 	Next string

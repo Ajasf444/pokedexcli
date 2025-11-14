@@ -1,4 +1,4 @@
-package main
+package pokeapi
 
 import (
 	"encoding/json"
@@ -42,7 +42,7 @@ func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error
 	return response, nil
 }
 
-func getLocationAreaResponse(url string) (LocationAreaResponse, error) {
+func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
 	data, err := getRequest(url)
 	if err != nil {
 		return LocationAreaResponse{}, err
@@ -54,7 +54,7 @@ func getLocationAreaResponse(url string) (LocationAreaResponse, error) {
 	return jsonData, nil
 }
 
-func printLocationArea(resp LocationAreaResponse) {
+func PrintLocationArea(resp LocationAreaResponse) {
 	data := resp.Results
 	results := []string{}
 	for _, location := range data {
@@ -63,7 +63,7 @@ func printLocationArea(resp LocationAreaResponse) {
 	fmt.Print(strings.Join(results, "\n") + "\n")
 }
 
-func updatePagination(pagination *PaginationConfig, resp LocationAreaResponse) {
+func UpdatePagination(pagination *PaginationConfig, resp LocationAreaResponse) {
 	pagination.Back = resp.Previous
 	pagination.Next = resp.Next
 }

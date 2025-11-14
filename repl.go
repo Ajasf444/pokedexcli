@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/Ajasf444/pokedexcli/internal/pokeapi"
 )
 
 const mapRequestLimit = 20
 
 var (
 	commandRegistry = map[string]*cliCommand{}
-	pagination      = &PaginationConfig{
+	pagination      = &pokeapi.PaginationConfig{
 		Next: "https://pokeapi.co/api/v2/location-area/",
 		Back: "",
 	}
@@ -46,13 +48,13 @@ func cleanInput(text string) []string {
 	return strings.Fields(lowerText)
 }
 
-func commandExit(pagination *PaginationConfig) error {
+func commandExit(pagination *pokeapi.PaginationConfig) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(pagination *PaginationConfig) error {
+func commandHelp(pagination *pokeapi.PaginationConfig) error {
 	fmt.Println("Usage:")
 	fmt.Print("\n")
 	for _, commandInfo := range commandRegistry {
@@ -61,39 +63,39 @@ func commandHelp(pagination *PaginationConfig) error {
 	return nil
 }
 
-func commandMap(pagination *PaginationConfig) error {
+func commandMap(pagination *pokeapi.PaginationConfig) error {
 	url := pagination.Next
-	results, err := getLocationAreaResponse(url)
+	results, err := pokeapi.GetLocationAreaResponse(url)
 	if err != nil {
 		return err
 	}
-	updatePagination(pagination, results)
-	printLocationArea(results)
+	pokeapi.UpdatePagination(pagination, results)
+	pokeapi.PrintLocationArea(results)
 	return nil
 }
 
-func commandMapB(pagination *PaginationConfig) error {
+func commandMapB(pagination *pokeapi.PaginationConfig) error {
 	url := pagination.Back
 	if url == "" {
 		fmt.Print("You are on the first page!\n")
 		return nil
 	}
-	results, err := getLocationAreaResponse(url)
+	results, err := pokeapi.GetLocationAreaResponse(url)
 	if err != nil {
 		return err
 	}
-	updatePagination(pagination, results)
-	printLocationArea(results)
+	pokeapi.UpdatePagination(pagination, results)
+	pokeapi.PrintLocationArea(results)
 	return nil
 }
 
 type cliCommand struct {
 	Name        string
 	Description string
-	Callback    func(*PaginationConfig) error
+	Callback    func(*pokeapi.PaginationConfig) error
 }
 
-func registerCommand(name, description string, callback func(*PaginationConfig) error) {
+func registerCommand(name, description string, callback func(*pokeapi.PaginationConfig) error) {
 	commandRegistry[name] = &cliCommand{
 		Name:        name,
 		Description: description,
