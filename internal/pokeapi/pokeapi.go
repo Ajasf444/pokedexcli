@@ -7,7 +7,12 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
+
+	"github.com/Ajasf444/pokedexcli/internal/pokecache"
 )
+
+var cache = pokecache.NewCache(10 * time.Second)
 
 type LocationAreaResponse struct {
 	Count    int    `json:"count"`
@@ -43,6 +48,7 @@ func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error
 }
 
 func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
+	// TODO: add caching
 	data, err := getRequest(url)
 	if err != nil {
 		return LocationAreaResponse{}, err
