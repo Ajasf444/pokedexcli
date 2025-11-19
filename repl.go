@@ -14,13 +14,13 @@ const mapRequestLimit = 20
 var (
 	commandRegistry = map[string]*cliCommand{}
 	pagination      = &pokeapi.PaginationConfig{
-		Next: "https://pokeapi.co/api/v2/location-area/",
+		Next: "https://pokeapi.co/api/v2/location-area",
 		Back: "",
 	}
 )
 
 func init() {
-	registerCommand("exit", "Exit the Pokedex", commandExit)
+	registerCommand("exit", "Exits the Pokedex", commandExit)
 	registerCommand("help", "Displays a help message", commandHelp)
 	registerCommand("map", "Displays 20 locations", commandMap)
 	registerCommand("mapb", "Displays 20 previous locations", commandMapB)
@@ -77,7 +77,7 @@ func commandMap(pagination *pokeapi.PaginationConfig) error {
 func commandMapB(pagination *pokeapi.PaginationConfig) error {
 	url := pagination.Back
 	if url == "" {
-		fmt.Print("You are on the first page!\n")
+		fmt.Println("You are on the first page!")
 		return nil
 	}
 	results, err := pokeapi.GetLocationAreaResponse(url)
