@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/Ajasf444/pokedexcli/internal/pokecache"
 )
 
-var cache = pokecache.NewCache(10 * time.Second)
+var cache = pokecache.NewCache(5 * time.Second)
 
 type LocationAreaResponse struct {
 	Count    int    `json:"count"`
@@ -48,11 +47,15 @@ func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error
 }
 
 func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
-	// TODO: add caching
-	data, err := getRequest(url)
-	if err != nil {
-		return LocationAreaResponse{}, err
+	data, ok := cache.Get(url)
+	if !ok {
+		var err error
+		data, err = getRequest(url)
+		if err != nil {
+			return LocationAreaResponse{}, err
+		}
 	}
+	cache.Add(url, data)
 	jsonData, err := convertDataToLocationAreaResponse(data)
 	if err != nil {
 		return LocationAreaResponse{}, err
@@ -62,14 +65,12 @@ func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
 
 func PrintLocationArea(resp LocationAreaResponse) {
 	data := resp.Results
-	results := []string{}
 	for _, location := range data {
-		results = append(results, location.Name)
+		fmt.Println(location.Name)
 	}
-	fmt.Print(strings.Join(results, "\n") + "\n")
 }
 
 func UpdatePagination(pagination *PaginationConfig, resp LocationAreaResponse) {
-	pagination.Back = resp.Previous
 	pagination.Next = resp.Next
+	pagination.Back = resp.Previous
 }
