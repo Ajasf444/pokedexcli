@@ -1,6 +1,7 @@
 package pokecache
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -21,6 +22,8 @@ func TestAddGet(t *testing.T) {
 		},
 	}
 	for in, out := range cases {
-		// TODO: implement testing
+		t.Run(fmt.Sprintf("Test Case %v", in), func(t *testing.T) {
+			// TODO: add tests
+		})
 	}
 }
