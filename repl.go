@@ -33,6 +33,9 @@ func startRepl() {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 		cleanedInput := cleanInput(scanner.Text())
+		if len(cleanedInput) == 0 {
+			continue
+		}
 		command := cleanedInput[0]
 		commandInfo, ok := commandRegistry[command]
 		if !ok {
@@ -86,6 +89,11 @@ func commandMapB(pagination *pokeapi.PaginationConfig) error {
 	}
 	pokeapi.UpdatePagination(pagination, results)
 	pokeapi.PrintLocationArea(results)
+	return nil
+}
+
+func commandExplore(pagination *pokeapi.PaginationConfig) error {
+	// TODO: add logic
 	return nil
 }
 
