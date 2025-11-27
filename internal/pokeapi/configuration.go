@@ -1,6 +1,6 @@
 package pokeapi
 
-type PaginationConfig struct {
+type Config struct {
 	Next string
 	Back string
 }
