@@ -32,7 +32,7 @@ func init() {
 	registerCommand("mapb", "Displays 20 previous locations", commandMapB)
 }
 
-func startRepl() {
+func startRepl(cfg *Config) {
 	fmt.Println("Welcome to the Pokedex!")
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
@@ -48,7 +48,7 @@ func startRepl() {
 			fmt.Println("Unknown command")
 			continue
 		}
-		commandInfo.Callback(pagination)
+		commandInfo.Callback(pagination) // TODO: make use of the &cfg.pagination
 	}
 }
 
