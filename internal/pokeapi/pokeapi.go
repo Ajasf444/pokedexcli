@@ -11,10 +11,13 @@ import (
 	"github.com/Ajasf444/pokedexcli/internal/pokecache"
 )
 
-// TODO: move this cache into the creation of the config/client
+// TODO: refactor most of this code to be more concise
+
+// TODO: use a pokeapiClient for the caching
 var cache = pokecache.NewCache(5 * time.Second)
 
 func getRequest(url string) ([]byte, error) {
+	// TODO: make use of the pokeapiClient
 	client := &http.Client{}
 	resp, err := client.Get(url)
 	if err != nil {
@@ -28,6 +31,7 @@ func getRequest(url string) ([]byte, error) {
 	return body, nil
 }
 
+// TODO: make this function more generic
 func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error) {
 	response := LocationAreaResponse{}
 	err := json.Unmarshal(data, &response)
@@ -61,7 +65,7 @@ func PrintLocationArea(resp LocationAreaResponse) {
 	}
 }
 
-func UpdatePagination(config *Config, resp LocationAreaResponse) {
-	config.Next = resp.Next
-	config.Back = resp.Previous
+func UpdatePagination(pagination *Pagination, resp LocationAreaResponse) {
+	pagination.Next = resp.Next
+	pagination.Back = resp.Previous
 }
