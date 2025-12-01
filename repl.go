@@ -14,16 +14,10 @@ const mapRequestLimit = 20
 
 type Config struct {
 	client     pokeapi.Client
-	pagination pokeapi.Pagination
+	pagination *pokeapi.Pagination
 }
 
-var (
-	commandRegistry = map[string]*cliCommand{}
-	pagination      = &pokeapi.Pagination{
-		Next: "https://pokeapi.co/api/v2/location-area",
-		Back: "",
-	}
-)
+var commandRegistry = map[string]*cliCommand{}
 
 func init() {
 	registerCommand("exit", "Exits the Pokedex", commandExit)
@@ -48,7 +42,7 @@ func startRepl(cfg *Config) {
 			fmt.Println("Unknown command")
 			continue
 		}
-		commandInfo.Callback(pagination) // TODO: make use of the &cfg.pagination
+		commandInfo.Callback(cfg.pagination)
 	}
 }
 
