@@ -31,7 +31,6 @@ func getRequest(url string) ([]byte, error) {
 	return body, nil
 }
 
-// TODO: make this function more generic
 func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error) {
 	response := LocationAreaResponse{}
 	err := json.Unmarshal(data, &response)
@@ -41,6 +40,7 @@ func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error
 	return response, nil
 }
 
+// TODO: make this function more generic
 func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
 	data, ok := cache.Get(url)
 	if !ok {
