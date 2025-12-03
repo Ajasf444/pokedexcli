@@ -31,6 +31,7 @@ func getRequest(url string) ([]byte, error) {
 	return body, nil
 }
 
+// TODO: incorporate this logic into GetLocationAreaResponse()
 func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error) {
 	response := LocationAreaResponse{}
 	err := json.Unmarshal(data, &response)
