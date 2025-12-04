@@ -59,6 +59,11 @@ func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
 	return jsonData, nil
 }
 
+func GetLocations(url string) ([]byte, error) {
+	// TODO: incorporate above code into this
+	return []byte{}, nil
+}
+
 func PrintLocationArea(resp LocationAreaResponse) {
 	data := resp.Results
 	for _, location := range data {
