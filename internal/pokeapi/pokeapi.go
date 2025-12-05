@@ -17,7 +17,6 @@ import (
 var cache = pokecache.NewCache(5 * time.Second)
 
 func getRequest(url string) ([]byte, error) {
-	// TODO: make use of the pokeapiClient
 	client := &http.Client{}
 	resp, err := client.Get(url)
 	if err != nil {
@@ -31,7 +30,6 @@ func getRequest(url string) ([]byte, error) {
 	return body, nil
 }
 
-// TODO: incorporate this logic into GetLocationAreaResponse()
 func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error) {
 	response := LocationAreaResponse{}
 	err := json.Unmarshal(data, &response)
@@ -41,7 +39,6 @@ func convertDataToLocationAreaResponse(data []byte) (LocationAreaResponse, error
 	return response, nil
 }
 
-// TODO: make this function more generic
 func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
 	data, ok := cache.Get(url)
 	if !ok {
@@ -59,9 +56,28 @@ func GetLocationAreaResponse(url string) (LocationAreaResponse, error) {
 	return jsonData, nil
 }
 
-func GetLocations(url string) ([]byte, error) {
-	// TODO: incorporate above code into this
-	return []byte{}, nil
+func (c *Client) GetLocations(url string) (LocationAreaResponse, error) {
+	if data, ok := c.cache.Get(url); ok {
+		response := LocationAreaResponse{}
+		if err := json.Unmarshal(data, &response); err != nil {
+			return response, err
+		}
+		return response, nil
+	}
+	resp, err := c.httpClient.Get(url)
+	if err != nil {
+		return LocationAreaResponse{}, errors.New("error: failed to get response")
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return LocationAreaResponse{}, errors.New("error: failed to read response body")
+	}
+	response := LocationAreaResponse{}
+	if err := json.Unmarshal(body, &response); err != nil {
+		return LocationAreaResponse{}, errors.New("error: unable to unmarshal LocationAreaResponse")
+	}
+	return response, nil
 }
 
 func PrintLocationArea(resp LocationAreaResponse) {
