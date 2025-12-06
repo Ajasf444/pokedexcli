@@ -42,7 +42,7 @@ func startRepl(cfg *Config) {
 			fmt.Println("Unknown command")
 			continue
 		}
-		commandInfo.Callback(cfg.pagination)
+		commandInfo.Callback(cfg)
 	}
 }
 
@@ -51,48 +51,50 @@ func cleanInput(text string) []string {
 	return strings.Fields(lowerText)
 }
 
-func commandExit(pagination *pokeapi.Pagination) error {
+func commandExit(cfg *Config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(pagination *pokeapi.Pagination) error {
+func commandHelp(cfg *Config) error {
 	fmt.Println("Usage:")
-	fmt.Print("\n")
+	fmt.Print("--------------------------------------\n")
 	for _, commandInfo := range commandRegistry {
 		fmt.Printf("%v: %v\n", commandInfo.Name, commandInfo.Description)
 	}
 	return nil
 }
 
-func commandMap(pagination *pokeapi.Pagination) error {
-	url := pagination.Next
-	results, err := pokeapi.GetLocationAreaResponse(url)
+func commandMap(cfg *Config) error {
+	// TODO: update this to incorporate cfg
+	url := cfg.pagination.Next
+	results, err := cfg.client.GetLocations(url)
 	if err != nil {
 		return err
 	}
-	pokeapi.UpdatePagination(pagination, results)
+	pokeapi.UpdatePagination(cfg.pagination, results)
 	pokeapi.PrintLocationArea(results)
 	return nil
 }
 
-func commandMapB(pagination *pokeapi.Pagination) error {
-	url := pagination.Back
+func commandMapB(cfg *Config) error {
+	// TODO: update this to incorporate cfg
+	url := cfg.pagination.Back
 	if url == "" {
 		fmt.Println("You are on the first page!")
 		return nil
 	}
-	results, err := pokeapi.GetLocationAreaResponse(url)
+	results, err := cfg.client.GetLocations(url)
 	if err != nil {
 		return err
 	}
-	pokeapi.UpdatePagination(pagination, results)
+	pokeapi.UpdatePagination(cfg.pagination, results)
 	pokeapi.PrintLocationArea(results)
 	return nil
 }
 
-func commandExplore(pagination *pokeapi.Pagination, location string) error {
+func commandExplore(cfg *Config, location string) error {
 	// TODO: add logic
 	return nil
 }
@@ -100,10 +102,10 @@ func commandExplore(pagination *pokeapi.Pagination, location string) error {
 type cliCommand struct {
 	Name        string
 	Description string
-	Callback    func(*pokeapi.Pagination) error
+	Callback    func(*Config) error
 }
 
-func registerCommand(name, description string, callback func(*pokeapi.Pagination) error) {
+func registerCommand(name, description string, callback func(*Config) error) {
 	commandRegistry[name] = &cliCommand{
 		Name:        name,
 		Description: description,
