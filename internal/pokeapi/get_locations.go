@@ -7,13 +7,11 @@ import (
 	"io"
 )
 
-// TODO: refactor most of this code to be more concise
-
 func (c *Client) GetLocations(url string) (LocationAreaResponse, error) {
 	if data, ok := c.cache.Get(url); ok {
 		response := LocationAreaResponse{}
 		if err := json.Unmarshal(data, &response); err != nil {
-			return response, err
+			return LocationAreaResponse{}, err
 		}
 		return response, nil
 	}
