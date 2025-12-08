@@ -7,7 +7,11 @@ import (
 	"io"
 )
 
-func (c *Client) GetLocations(url string) (LocationAreaResponse, error) {
+func (c *Client) GetLocations(pageURL *string) (LocationAreaResponse, error) {
+	url := baseURL + "/location-area"
+	if pageURL != nil {
+		url = *pageURL
+	}
 	if data, ok := c.cache.Get(url); ok {
 		response := LocationAreaResponse{}
 		if err := json.Unmarshal(data, &response); err != nil {

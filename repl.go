@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -42,7 +43,11 @@ func startRepl(cfg *Config) {
 			fmt.Println("Unknown command")
 			continue
 		}
-		commandInfo.Callback(cfg)
+		err := commandInfo.Callback(cfg)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 	}
 }
 
@@ -67,7 +72,6 @@ func commandHelp(cfg *Config) error {
 }
 
 func commandMap(cfg *Config) error {
-	// TODO: update this to incorporate cfg
 	url := cfg.pagination.Next
 	results, err := cfg.client.GetLocations(url)
 	if err != nil {
@@ -79,11 +83,9 @@ func commandMap(cfg *Config) error {
 }
 
 func commandMapB(cfg *Config) error {
-	// TODO: update this to incorporate cfg
 	url := cfg.pagination.Back
-	if url == "" {
-		fmt.Println("You are on the first page!")
-		return nil
+	if url == nil {
+		return errors.New("You are on the first page!")
 	}
 	results, err := cfg.client.GetLocations(url)
 	if err != nil {
