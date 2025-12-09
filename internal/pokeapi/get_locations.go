@@ -12,24 +12,21 @@ func (c *Client) GetLocations(pageURL *string) (LocationAreaResponse, error) {
 	if pageURL != nil {
 		url = *pageURL
 	}
-	if data, ok := c.cache.Get(url); ok {
-		response := LocationAreaResponse{}
-		if err := json.Unmarshal(data, &response); err != nil {
-			return LocationAreaResponse{}, err
+	data, ok := c.cache.Get(url)
+	if !ok {
+		resp, err := c.httpClient.Get(url)
+		if err != nil {
+			return LocationAreaResponse{}, errors.New("error: failed to get response")
 		}
-		return response, nil
-	}
-	resp, err := c.httpClient.Get(url)
-	if err != nil {
-		return LocationAreaResponse{}, errors.New("error: failed to get response")
-	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return LocationAreaResponse{}, errors.New("error: failed to read response body")
+		defer resp.Body.Close()
+		data, err = io.ReadAll(resp.Body)
+		if err != nil {
+			return LocationAreaResponse{}, errors.New("error: failed to read response body")
+		}
+		c.cache.Add(url, data)
 	}
 	response := LocationAreaResponse{}
-	if err := json.Unmarshal(body, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		return LocationAreaResponse{}, errors.New("error: unable to unmarshal LocationAreaResponse")
 	}
 	return response, nil
