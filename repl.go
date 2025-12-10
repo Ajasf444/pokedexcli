@@ -28,6 +28,7 @@ func init() {
 }
 
 func startRepl(cfg *Config) {
+	var arg string
 	fmt.Println("Welcome to the Pokedex!")
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
@@ -38,12 +39,15 @@ func startRepl(cfg *Config) {
 			continue
 		}
 		command := cleanedInput[0]
+		if len(cleanedInput) >= 2 {
+			arg = cleanedInput[1]
+		}
 		commandInfo, ok := commandRegistry[command]
 		if !ok {
 			fmt.Println("Unknown command")
 			continue
 		}
-		err := commandInfo.Callback(cfg)
+		err := commandInfo.Callback(cfg, arg)
 		if err != nil {
 			fmt.Println(err)
 			continue
@@ -56,13 +60,13 @@ func cleanInput(text string) []string {
 	return strings.Fields(lowerText)
 }
 
-func commandExit(cfg *Config) error {
+func commandExit(cfg *Config, arg string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(cfg *Config) error {
+func commandHelp(cfg *Config, arg string) error {
 	fmt.Println("Usage:")
 	fmt.Print("--------------------------------------\n")
 	for _, commandInfo := range commandRegistry {
@@ -71,7 +75,7 @@ func commandHelp(cfg *Config) error {
 	return nil
 }
 
-func commandMap(cfg *Config) error {
+func commandMap(cfg *Config, arg string) error {
 	url := cfg.pagination.Next
 	results, err := cfg.client.GetLocations(url)
 	if err != nil {
@@ -82,7 +86,7 @@ func commandMap(cfg *Config) error {
 	return nil
 }
 
-func commandMapB(cfg *Config) error {
+func commandMapB(cfg *Config, arg string) error {
 	url := cfg.pagination.Back
 	if url == nil {
 		return errors.New("You are on the first page!")
@@ -104,10 +108,10 @@ func commandExplore(cfg *Config, location string) error {
 type cliCommand struct {
 	Name        string
 	Description string
-	Callback    func(*Config) error
+	Callback    func(*Config, string) error
 }
 
-func registerCommand(name, description string, callback func(*Config) error) {
+func registerCommand(name, description string, callback func(*Config, string) error) {
 	commandRegistry[name] = &cliCommand{
 		Name:        name,
 		Description: description,
