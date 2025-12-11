@@ -22,6 +22,7 @@ var commandRegistry = map[string]*cliCommand{}
 
 func init() {
 	registerCommand("exit", "Exits the Pokedex", commandExit)
+	registerCommand("explore", "Identify Pokemon in provided Location Area", commandExplore)
 	registerCommand("help", "Displays a help message", commandHelp)
 	registerCommand("map", "Displays 20 locations", commandMap)
 	registerCommand("mapb", "Displays 20 previous locations", commandMapB)
@@ -101,7 +102,11 @@ func commandMapB(cfg *Config, arg string) error {
 }
 
 func commandExplore(cfg *Config, location string) error {
-	// TODO: add logic
+	results, err := cfg.client.GetLocationContent(location)
+	if err != nil {
+		return err
+	}
+	pokeapi.PrintPokemon(results)
 	return nil
 }
 
