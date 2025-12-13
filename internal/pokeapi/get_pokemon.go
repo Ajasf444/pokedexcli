@@ -5,17 +5,18 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 )
 
-// TODO: update this signature
-func (c *Client) GetLocationContent(pageURL *string) (LocationAreaContent, error) {
-	url := baseURL + "/location-area" // TODO: update this url
-	if pageURL != nil {
-		url = *pageURL
-	}
+func (c *Client) GetLocationContent(location string) (LocationAreaContent, error) {
+	url := baseURL + "/location-area/" + location
 	data, ok := c.cache.Get(url)
 	if !ok {
-		resp, err := c.httpClient.Get(url)
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return LocationAreaContent{}, errors.New("error: failed to generate request")
+		}
+		resp, err := c.httpClient.Do(req)
 		if err != nil {
 			return LocationAreaContent{}, errors.New("error: failed to get response")
 		}
@@ -33,9 +34,8 @@ func (c *Client) GetLocationContent(pageURL *string) (LocationAreaContent, error
 	return response, nil
 }
 
-func PrintPokemon(resp LocationAreaResponse) {
-	data := resp.Results
-	for _, location := range data {
-		fmt.Println(location.Name)
+func PrintPokemon(resp LocationAreaContent) {
+	for _, encounter := range resp.PokemonEncounters {
+		fmt.Println(encounter.Pokemon.Name)
 	}
 }

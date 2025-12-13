@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 )
 
 func (c *Client) GetLocations(pageURL *string) (LocationAreaResponse, error) {
@@ -14,7 +15,11 @@ func (c *Client) GetLocations(pageURL *string) (LocationAreaResponse, error) {
 	}
 	data, ok := c.cache.Get(url)
 	if !ok {
-		resp, err := c.httpClient.Get(url)
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return LocationAreaResponse{}, errors.New("error: failed to generate request")
+		}
+		resp, err := c.httpClient.Do(req)
 		if err != nil {
 			return LocationAreaResponse{}, errors.New("error: failed to get response")
 		}
@@ -33,8 +38,7 @@ func (c *Client) GetLocations(pageURL *string) (LocationAreaResponse, error) {
 }
 
 func PrintLocationArea(resp LocationAreaResponse) {
-	data := resp.Results
-	for _, location := range data {
+	for _, location := range resp.Results {
 		fmt.Println(location.Name)
 	}
 }
