@@ -20,6 +20,7 @@ type Config struct {
 var commandRegistry = map[string]*cliCommand{}
 
 func init() {
+	registerCommand("catch", "Attempt to catch the provided Pokemon", commandCatch)
 	registerCommand("exit", "Exits the Pokedex", commandExit)
 	registerCommand("explore", "Identify Pokemon in provided Location Area", commandExplore)
 	registerCommand("help", "Displays a help message", commandHelp)
