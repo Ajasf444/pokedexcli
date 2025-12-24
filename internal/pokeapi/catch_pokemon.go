@@ -3,7 +3,9 @@ package pokeapi
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 )
 
@@ -40,7 +42,14 @@ func (c *Client) CatchPokemon(name string) error {
 	}
 	print(pokemon)
 	//TODO: based on base XP generate whether Pokemon was caught
+	num := rand.Intn(pokemon.BaseExperience)
+	caught := num > pokemon.BaseExperience/4
+	if !caught {
+		fmt.Println("Pokemon escaped!")
+		return nil
+	}
 	//TODO: print capture or escape
+	fmt.Println("Pokemon caught!")
 	//TODO: add caught pokemon to pokedex
 	return nil
 }
