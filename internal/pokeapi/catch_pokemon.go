@@ -48,9 +48,8 @@ func (c *Client) CatchPokemon(name string) error {
 		fmt.Println("Pokemon escaped!")
 		return nil
 	}
-	//TODO: print capture or escape
-	fmt.Println("Pokemon caught!")
-	//TODO: add caught pokemon to pokedex
+
 	c.caughtPokemon[name] = pokemon
+	fmt.Println("Pokemon caught!")
 	return nil
 }
