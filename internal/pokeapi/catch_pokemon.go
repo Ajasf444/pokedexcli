@@ -9,28 +9,31 @@ import (
 	"net/http"
 )
 
-func (c *Client) getPokemon(name string) (Pokemon, error) {
+func (c *Client) getPokemon(name string) (SimplePokemon, error) {
 	url := baseURL + "/ability/" + name
-	data, ok := c.cache.Get(url)
+	var data []byte
+	var ok bool
+	data, ok = c.cache.Get(url)
 	if !ok {
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
-			return Pokemon{}, errors.New("error: unable to generate request")
+			return SimplePokemon{}, errors.New("error: unable to generate request")
 		}
 		resp, err := c.httpClient.Do(req)
 		if err != nil {
-			return Pokemon{}, errors.New("error: failed to get response")
+			return SimplePokemon{}, errors.New("error: failed to get response")
 		}
 		defer resp.Body.Close()
 		data, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return Pokemon{}, errors.New("error: failed to read response body")
+			return SimplePokemon{}, errors.New("error: failed to read response body")
 		}
 		c.cache.Add(url, data)
 	}
-	pokemon := Pokemon{}
+	//TODO: try making a SimplePokemon struct with only BaseExperience
+	pokemon := SimplePokemon{}
 	if err := json.Unmarshal(data, &pokemon); err != nil {
-		return Pokemon{}, nil
+		return SimplePokemon{}, errors.New("error: unable to unmarshal Pokemon")
 	}
 	return pokemon, nil
 }
@@ -40,7 +43,6 @@ func (c *Client) CatchPokemon(name string) error {
 	if err != nil {
 		return err
 	}
-	print(pokemon)
 	//TODO: based on base XP generate whether Pokemon was caught
 	num := rand.Intn(pokemon.BaseExperience)
 	caught := num > pokemon.BaseExperience/4
