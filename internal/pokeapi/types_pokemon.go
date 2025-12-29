@@ -1,5 +1,9 @@
 package pokeapi
 
+type SimplePokemon struct {
+	BaseExperience int `json:"base_experience"`
+}
+
 type Pokemon struct {
 	Abilities []struct {
 		Ability struct {
