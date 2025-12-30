@@ -9,31 +9,31 @@ import (
 	"net/http"
 )
 
-func (c *Client) getPokemon(name string) (SimplePokemon, error) {
-	url := baseURL + "/ability/" + name
-	var data []byte
-	var ok bool
-	data, ok = c.cache.Get(url)
+func (c *Client) getPokemon(name string) (Pokemon, error) {
+	url := baseURL + "/pokemon/" + name + "/"
+	data, ok := c.cache.Get(url)
 	if !ok {
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
-			return SimplePokemon{}, errors.New("error: unable to generate request")
+			return Pokemon{}, errors.New("error: unable to generate request")
 		}
 		resp, err := c.httpClient.Do(req)
 		if err != nil {
-			return SimplePokemon{}, errors.New("error: failed to get response")
+			return Pokemon{}, errors.New("error: failed to get response")
 		}
 		defer resp.Body.Close()
-		data, err := io.ReadAll(resp.Body)
+		data, err = io.ReadAll(resp.Body) // walrus operator created a new "data" variable in block that was not passed out for unmarshalling
+		fmt.Println(string(data))
 		if err != nil {
-			return SimplePokemon{}, errors.New("error: failed to read response body")
+			return Pokemon{}, errors.New("error: failed to read response body")
 		}
 		c.cache.Add(url, data)
 	}
+
 	//TODO: try making a SimplePokemon struct with only BaseExperience
-	pokemon := SimplePokemon{}
+	pokemon := Pokemon{}
 	if err := json.Unmarshal(data, &pokemon); err != nil {
-		return SimplePokemon{}, errors.New("error: unable to unmarshal Pokemon")
+		return Pokemon{}, errors.New("error: unable to unmarshal Pokemon")
 	}
 	return pokemon, nil
 }
