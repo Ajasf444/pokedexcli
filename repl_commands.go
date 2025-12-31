@@ -67,7 +67,10 @@ func commandExplore(cfg *Config, location string) error {
 }
 
 func commandCatch(cfg *Config, pokemon string) error {
-	// TODO: add rest of logic
+	err := cfg.client.CatchPokemon(pokemon)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
