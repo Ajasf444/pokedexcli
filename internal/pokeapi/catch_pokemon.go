@@ -7,6 +7,9 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func (c *Client) getPokemon(name string) (Pokemon, error) {
@@ -23,7 +26,6 @@ func (c *Client) getPokemon(name string) (Pokemon, error) {
 		}
 		defer resp.Body.Close()
 		data, err = io.ReadAll(resp.Body) // walrus operator created a new "data" variable in block that was not passed out for unmarshalling
-		fmt.Println(string(data))
 		if err != nil {
 			return Pokemon{}, errors.New("error: failed to read response body")
 		}
@@ -43,15 +45,17 @@ func (c *Client) CatchPokemon(name string) error {
 	if err != nil {
 		return err
 	}
+	pokemonName := cases.Title(language.English).String(pokemon.Name)
+	fmt.Println("Throwing Pokeball at " + pokemonName + "...")
 	//TODO: based on base XP generate whether Pokemon was caught
 	num := rand.Intn(pokemon.BaseExperience)
 	caught := num > pokemon.BaseExperience/4
 	if !caught {
-		fmt.Println("Pokemon escaped!")
+		fmt.Println(pokemonName + " escaped!")
 		return nil
 	}
 
 	c.caughtPokemon[name] = pokemon
-	fmt.Println("Pokemon caught!")
+	fmt.Println(pokemonName + " caught!")
 	return nil
 }
