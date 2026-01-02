@@ -67,7 +67,6 @@ func (c *Client) CatchPokemonSimple(name string) error {
 	}
 	pokemonName := pokemon.Name
 	fmt.Println("Throwing Pokeball at " + pokemonName + "...")
-	//TODO: based on base XP generate whether Pokemon was caught
 	num := rand.Intn(pokemon.BaseExperience)
 	caught := num > pokemon.BaseExperience/4
 	if !caught {
