@@ -12,6 +12,8 @@ import (
 	"golang.org/x/text/language"
 )
 
+const maxXP float64 = 608
+
 func (c *Client) getPokemon(name string) (Pokemon, error) {
 	url := baseURL + "/pokemon/" + name + "/"
 	data, ok := c.cache.Get(url)
@@ -32,7 +34,6 @@ func (c *Client) getPokemon(name string) (Pokemon, error) {
 		c.cache.Add(url, data)
 	}
 
-	//TODO: try making a SimplePokemon struct with only BaseExperience
 	pokemon := Pokemon{}
 	if err := json.Unmarshal(data, &pokemon); err != nil {
 		return Pokemon{}, errors.New("error: unable to unmarshal Pokemon")
@@ -46,8 +47,8 @@ func (c *Client) CatchPokemon(name string) error {
 		return err
 	}
 	pokemonName := cases.Title(language.English).String(pokemon.Name)
-	fmt.Println("Throwing Pokeball at " + pokemonName + "...")
-	//TODO: based on base XP generate whether Pokemon was caught
+	fmt.Println("Throwing a Pokeball at " + pokemonName + "...")
+	// TODO: based on base XP generate whether Pokemon was caught
 	num := rand.Intn(pokemon.BaseExperience)
 	caught := num > pokemon.BaseExperience/4
 	if !caught {
