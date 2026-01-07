@@ -41,13 +41,17 @@ func (c *Client) getPokemon(name string) (Pokemon, error) {
 	return pokemon, nil
 }
 
+func throwPokeball(name string) {
+	fmt.Println("Throwing a Pokeball at " + name + "...")
+}
+
 func (c *Client) CatchPokemon(name string) error {
 	pokemon, err := c.getPokemon(name)
 	if err != nil {
 		return err
 	}
 	pokemonName := cases.Title(language.English).String(pokemon.Name)
-	fmt.Println("Throwing a Pokeball at " + pokemonName + "...")
+	throwPokeball(pokemonName)
 	// TODO: based on base XP generate whether Pokemon was caught
 	num := rand.Intn(pokemon.BaseExperience)
 	caught := num > pokemon.BaseExperience/4
@@ -67,7 +71,7 @@ func (c *Client) CatchPokemonSimple(name string) error {
 		return err
 	}
 	pokemonName := pokemon.Name
-	fmt.Println("Throwing Pokeball at " + pokemonName + "...")
+	throwPokeball(pokemonName)
 	num := rand.Intn(pokemon.BaseExperience)
 	caught := num > pokemon.BaseExperience/4
 	if !caught {
