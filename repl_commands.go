@@ -74,6 +74,10 @@ func commandCatch(cfg *Config, pokemon string) error {
 	return nil
 }
 
+func commandInspect(cfg *Config, pokemon string) error {
+	return nil
+}
+
 func registerCommand(name, description string, callback func(*Config, string) error) {
 	commandRegistry[name] = &cliCommand{
 		Name:        name,
