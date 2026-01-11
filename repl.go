@@ -24,6 +24,7 @@ func init() {
 	registerCommand("exit", "Exits the Pokedex", commandExit)
 	registerCommand("explore", "Identify Pokemon in provided Location Area", commandExplore)
 	registerCommand("help", "Displays a help message", commandHelp)
+	registerCommand("inspect", "Inspects the provided Pokemon if caught", commandInspect)
 	registerCommand("map", "Displays 20 locations", commandMap)
 	registerCommand("mapb", "Displays 20 previous locations", commandMapB)
 }
