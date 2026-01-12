@@ -75,6 +75,10 @@ func commandCatch(cfg *Config, pokemon string) error {
 }
 
 func commandInspect(cfg *Config, pokemon string) error {
+	err := cfg.client.InspectPokemon(pokemon)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
