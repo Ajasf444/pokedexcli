@@ -10,6 +10,10 @@ func (c *Client) InspectPokemon(name string) error {
 	if !ok {
 		return errors.New(fmt.Sprintf("%v has not been caught!", name))
 	}
-	fmt.Println(pokemon) // TODO: handle pokemon data
+	printPokemonStats(pokemon)
 	return nil
+}
+
+func printPokemonStats(pokemon Pokemon) {
+	// TODO: add logic
 }
