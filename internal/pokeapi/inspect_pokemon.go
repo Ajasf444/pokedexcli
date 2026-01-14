@@ -15,5 +15,5 @@ func (c *Client) InspectPokemon(name string) error {
 }
 
 func printPokemonStats(pokemon Pokemon) {
-	// TODO: add logic
+	fmt.Println(pokemon)
 }
