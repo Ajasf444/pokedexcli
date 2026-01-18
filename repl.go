@@ -27,6 +27,7 @@ func init() {
 	registerCommand("inspect", "Inspects the provided Pokemon if caught", commandInspect)
 	registerCommand("map", "Displays 20 locations", commandMap)
 	registerCommand("mapb", "Displays 20 previous locations", commandMapB)
+	registerCommand("pokedex", "Displays all caught Pokemon", commandPokedex)
 }
 
 func startRepl(cfg *Config) {
