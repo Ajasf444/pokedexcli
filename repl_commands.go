@@ -82,6 +82,14 @@ func commandInspect(cfg *Config, pokemon string) error {
 	return nil
 }
 
+func commandPokedex(cfg *Config, arg string) error {
+	err := cfg.client.Pokedex()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func registerCommand(name, description string, callback func(*Config, string) error) {
 	commandRegistry[name] = &cliCommand{
 		Name:        name,
