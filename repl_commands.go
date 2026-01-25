@@ -55,11 +55,38 @@ func commandMapB(cfg *Config, arg string) error {
 }
 
 func commandExplore(cfg *Config, location string) error {
+	if location == "" {
+		return errors.New("Provide a location!")
+	}
 	results, err := cfg.client.GetLocationContent(location)
 	if err != nil {
 		return err
 	}
 	pokeapi.PrintPokemon(results)
+	return nil
+}
+
+func commandCatch(cfg *Config, pokemon string) error {
+	err := cfg.client.CatchPokemonSimple(pokemon)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func commandInspect(cfg *Config, pokemon string) error {
+	err := cfg.client.InspectPokemon(pokemon)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func commandPokedex(cfg *Config, arg string) error {
+	err := cfg.client.Pokedex()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
