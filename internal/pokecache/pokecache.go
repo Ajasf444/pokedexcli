@@ -6,7 +6,7 @@ import (
 )
 
 type Cache struct {
-	mu      *sync.Mutex
+	mu      sync.Mutex
 	entries map[string]cacheEntry
 }
 
@@ -21,7 +21,6 @@ func (e cacheEntry) isExpired(expirationTime time.Duration) bool {
 
 func NewCache(expirationTime time.Duration) *Cache {
 	newCache := &Cache{
-		mu:      &sync.Mutex{},
 		entries: map[string]cacheEntry{},
 	}
 	go newCache.reapLoop(expirationTime)
