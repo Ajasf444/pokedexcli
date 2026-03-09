@@ -6,7 +6,7 @@ import (
 )
 
 type Cache struct {
-	mu      *sync.Mutex
+	mu      sync.Mutex
 	entries map[string]cacheEntry
 }
 
@@ -15,12 +15,15 @@ type cacheEntry struct {
 	val       []byte
 }
 
-func NewCache(interval time.Duration) *Cache {
+func (e cacheEntry) isExpired(expirationTime time.Duration) bool {
+	return time.Since(e.createdAt) > expirationTime
+}
+
+func NewCache(expirationTime time.Duration) *Cache {
 	newCache := &Cache{
-		mu:      &sync.Mutex{},
 		entries: map[string]cacheEntry{},
 	}
-	go newCache.reapLoop(interval)
+	go newCache.reapLoop(expirationTime)
 	return newCache
 }
 
@@ -40,12 +43,12 @@ func (c *Cache) Get(key string) (val []byte, ok bool) {
 	return entry.val, ok
 }
 
-func (c *Cache) reapLoop(interval time.Duration) {
-	ticker := time.NewTicker(interval)
+func (c *Cache) reapLoop(expirationTime time.Duration) {
+	ticker := time.NewTicker(expirationTime)
 	for range ticker.C {
 		c.mu.Lock()
 		for key, entry := range c.entries {
-			if time.Since(entry.createdAt) > interval {
+			if entry.isExpired(expirationTime) {
 				delete(c.entries, key)
 			}
 		}
